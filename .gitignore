@@ -166,3 +166,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+#Own
+private/api_testing.robot
+private/headless.robot
+private/run_browser.robot
+private/

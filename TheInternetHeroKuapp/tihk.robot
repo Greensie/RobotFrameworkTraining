@@ -85,7 +85,7 @@ TC_005
 
 TC_006
     [documentation]  Checking Canvas value is changing
-    [tags]  InProgress
+    [tags]  Done
     Prepare Headless
     click element       XPath=//a[text()='Challenging DOM']
     Sleep   200ms
@@ -109,3 +109,31 @@ TC_006
         Should Not Be Equal     ${canvas_data}      ${canvas_data2}
     END
     Cleanup
+
+TC_007
+    [documentation]  Checking checkboxes
+    [tags]  Done
+    Prepare
+    click element       XPath=//a[text()='Checkboxes']
+    sleep   500ms
+    Page Should Contain     Checkboxes
+    Checkbox Should Not Be Selected     XPath=//form[@id='checkboxes']/input[1]
+    Checkbox Should Be Selected     XPath=//form[@id='checkboxes']/input[2]
+    click element   XPath=//form[@id='checkboxes']/input[1]
+    click element   XPath=//form[@id='checkboxes']/input[2]
+    Checkbox Should Be Selected     XPath=//form[@id='checkboxes']/input[1]
+    Checkbox Should Not Be Selected     XPath=//form[@id='checkboxes']/input[2]
+    Cleanup
+
+TC_008
+    [documentation]  Context menus
+    [tags]  InProgress
+    Prepare
+    click element       XPath=//a[text()='Context Menu']
+    sleep   500ms
+    Page Should Contain     Context Menu
+    Open Context Menu   XPath=//div[@id='hot-spot']
+    Handle Alert
+    sleep   500ms
+    Cleanup
+

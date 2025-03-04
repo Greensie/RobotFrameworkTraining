@@ -171,7 +171,37 @@ TC_011
 
 TC_012
     [documentation]  Checking if dynamic content changes after refresh
-    [tags]  TBD
+    [tags]  Done
     Prepare
     Click Element       XPath=//a[text()='Dynamic Content']
     Wait Until Page Contains   Dynamic Content
+    FOR     ${i}    IN RANGE    1   4
+        ${text}=    Get Text    XPath=(//div[contains(@class, 'large-10') and contains(@class, 'columns')])[${i}]
+        ${img}=    Get Element Attribute   XPath=(//div[contains(@class, 'large-2') and contains(@class, 'columns')])[${i}]//img    src
+        Reload Page
+        ${textcpr}=  Get Text    XPath=(//div[contains(@class, 'large-10') and contains(@class, 'columns')])[${i}]
+        ${imgcpr}=    Get Element Attribute   XPath=(//div[contains(@class, 'large-2') and contains(@class, 'columns')])[${i}]//img   src
+        Run Keyword And Warn On Failure     Should Not Be Equal     ${text}    ${textcpr}   #as the images sometimes are randomly the same
+        Run Keyword And Warn On Failure     Should Not Be Equal     ${img}    ${imgcpr}
+    END
+    Cleanup
+
+TC_013
+    [documentation]  Dynamic Controls
+    [tags]  InProgress
+    Prepare
+    Click Element       XPath=//a[text()='Dynamic Controls']
+    Wait Until Page Contains   Dynamic Controls
+    Page Should Contain     A checkbox
+    Click Element       XPath=//form[@id='checkbox-example']/div/input
+    Checkbox Should Be Selected     XPath=//form[@id='checkbox-example']/div/input
+    Click Element   XPath=//form[@id='checkbox-example']/button[text()='Remove']
+    Wait Until Page Contains Element    XPath=//form[@id='checkbox-example']/button[text()='Add']       10s
+    Click Element   XPath=//form[@id='checkbox-example']/button[text()='Add']
+    Wait Until Page Contains Element    XPath=//form[@id='checkbox-example']/button[text()='Remove']      10s
+    Click Element   XPath=//form[@id='input-example']/button[text()='Enable']
+    Wait Until Page Contains Element    XPath=//form[@id='input-example']/button[text()='Disable']      10s
+    Input Text      XPath=//form[@id='input-example']/input   AbCdEfGHiJKlMNoP
+    Click Element   XPath=//form[@id='input-example']/button[text()='Disable']
+    Wait Until Page Contains Element    XPath=//form[@id='input-example']/button[text()='Enable']      10s
+    Cleanup

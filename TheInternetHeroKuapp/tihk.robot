@@ -1,5 +1,6 @@
 *** Settings ***
-Library  SeleniumLibrary
+Library   SeleniumLibrary
+Library   OperatingSystem
 
 *** Variables ***
 ${url}      https://the-internet.herokuapp.com/
@@ -7,6 +8,7 @@ ${browser}      chrome
 ${headless_browser}     headlesschrome
 ${login}    admin
 ${pass}     admin
+${absolute_path}    SecretPATH
 
 *** Keywords ***
 Cleanup
@@ -188,7 +190,7 @@ TC_012
 
 TC_013
     [documentation]  Dynamic Controls
-    [tags]  InProgress
+    [tags]  Done
     Prepare
     Click Element       XPath=//a[text()='Dynamic Controls']
     Wait Until Page Contains   Dynamic Controls
@@ -204,4 +206,66 @@ TC_013
     Input Text      XPath=//form[@id='input-example']/input   AbCdEfGHiJKlMNoP
     Click Element   XPath=//form[@id='input-example']/button[text()='Disable']
     Wait Until Page Contains Element    XPath=//form[@id='input-example']/button[text()='Enable']      10s
+    Cleanup
+
+TC_014
+    [documentation]  Dynamic Loading
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Dynamic Loading']
+    Wait Until Page Contains   Dynamically Loaded Page Elements
+    ${taburl}=      Get Element Attribute    XPath=//div[@id='content']/div[@class='example']/a     href
+    Open Browser    ${taburl}      ${browser}
+    Wait Until Page Contains   Example 1: Element on page that is hidden
+    Click Element   XPath=//div[@id='content']/div[@class='example']/div[@id='start']/button
+    Wait Until Page Contains    Hello World!    10s
+    Cleanup
+    Prepare
+    Click Element       XPath=//a[text()='Dynamic Loading']
+    Wait Until Page Contains   Dynamically Loaded Page Elements
+    ${taburl}=      Get Element Attribute    XPath=//div[@id='content']/div[@class='example']/a[2]     href
+    Open Browser    ${taburl}      ${browser}
+    Wait Until Page Contains   Example 2: Element rendered after the fact
+    Click Element   XPath=//div[@id='content']/div[@class='example']/div[@id='start']/button
+    Wait Until Page Contains    Hello World!    10s
+    Close Window
+    Cleanup
+
+TC_015
+    [documentation]  Entry Ad
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Entry Ad']
+    Wait Until Element Is Visible       XPath=//div[@class='modal-footer']/p
+    Click Element       XPath=//div[@class='modal-footer']/p
+    Cleanup
+
+TC_016
+    [documentation]  Exit Intent
+    [tags]  Done    Issue
+    Prepare
+    Click Element       XPath=//a[text()='Exit Intent']
+    Wait Until Page Contains   Mouse out of the viewport pane and see a modal window appear.
+    Mouse Out    XPath=//h3[text()='Exit Intent']
+    Cleanup
+
+TC_017
+    [documentation]  File Download
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='File Download']
+    Wait Until Page Contains   File Downloader
+    Click Element       XPath=//div[@class='example']/a[text()='2.png']
+    Sleep   2s
+    File Should Exist   2.png
+    Cleanup
+
+TC_018
+    [documentation]  File Upload
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='File Upload']
+    Wait Until Page Contains   Choose a file on your system and then click upload. Or, drag and drop a file into the area below.
+    Choose File   XPath=//input[@id='file-upload']   ${absolute_path}   #run with command robot --variable absolute_path:*path* -i InProgress .\tihk.robot
+    Click Element       XPath=//input[@class='button']
     Cleanup

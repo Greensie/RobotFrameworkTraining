@@ -269,3 +269,58 @@ TC_018
     Choose File   XPath=//input[@id='file-upload']   ${absolute_path}   #run with command robot --variable absolute_path:*path* -i InProgress .\tihk.robot
     Click Element       XPath=//input[@class='button']
     Cleanup
+
+TC_019
+    [documentation]  Floating Menu
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Floating Menu']
+    Wait Until Page Contains    Floating Menu
+    Element Should Be Visible       XPath=//div[@id='menu']/ul/li/a[text()='Contact']
+    FOR     ${i}    IN RANGE    1   5
+        ${x}=   Evaluate     1000*${i}
+        Set Window Position     ${x}    100
+        Element Should Be Visible       XPath=//div[@id='menu']/ul/li/a[text()='Contact']
+    END
+    Cleanup
+
+TC_020
+    [documentation]  Forgotten password
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Forgot Password']
+    Wait Until Page Contains    Forgot Password
+    ${mail}=    Set Variable   deffnotsomeonesmail@gmail.com
+    Input Text      XPath=//input[@id='email']      ${mail}
+    Click Element       XPath=//button[@id='form_submit']
+    Wait Until Page Contains    Internal Server Error
+    Cleanup
+
+TC_021
+    [documentation]  Form Authentication
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Form Authentication']
+    Wait Until Page Contains    Login Page
+    ${user}=    Set Variable   tomsmith
+    ${pass}=    Set Variable    SuperSecretPassword!
+    Input Text      XPath=//input[@id='username']      ${user}
+    Input Password      XPath=//input[@id='password']       ${pass}
+    Click Element       XPath=//button[@class='radius']/i
+    Wait Until Page Contains    Secure Area
+    Click Element       XPath=//a[@class='button secondary radius']/i
+    Cleanup
+
+TC_021_Negative
+    [documentation]  Form Authentication
+    [tags]  Done  Negative
+    Prepare
+    Click Element       XPath=//a[text()='Form Authentication']
+    Wait Until Page Contains    Login Page
+    ${user}=    Set Variable   Nottomsmith
+    ${pass}=    Set Variable    SuperPublicPassword:(
+    Input Text      XPath=//input[@id='username']      ${user}
+    Input Password      XPath=//input[@id='password']       ${pass}
+    Click Element       XPath=//button[@class='radius']/i
+    Page Should Contain      Your username is invalid!
+    Cleanup

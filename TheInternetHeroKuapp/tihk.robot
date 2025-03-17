@@ -1,6 +1,7 @@
 *** Settings ***
 Library   SeleniumLibrary
 Library   OperatingSystem
+Library   Collections
 
 *** Variables ***
 ${url}      https://the-internet.herokuapp.com/
@@ -323,4 +324,45 @@ TC_021_Negative
     Input Password      XPath=//input[@id='password']       ${pass}
     Click Element       XPath=//button[@class='radius']/i
     Page Should Contain      Your username is invalid!
+    Cleanup
+
+TC_022
+    [documentation]  Frames
+    [tags]  Done
+    @{exp}=     Create List      LEFT   MIDDLE  RIGHT   BOTTOM
+    Prepare
+    Click Element       XPath=//a[text()='Frames']
+    Wait Until Page Contains    Frames
+    Click Element       XPath=//a[text()='Nested Frames']
+    Sleep   500ms
+    Select Frame    XPath=//frame[@name='frame-top']
+    Select Frame    XPath=//frame[@name='frame-left']
+    ${left_txt}=    Get Text    XPath=//body
+    Unselect Frame
+    Select Frame    XPath=//frame[@name='frame-top']
+    Select Frame    XPath=//frame[@name='frame-middle']
+    ${mid_txt}=    Get Text    XPath=//body
+    Unselect Frame
+    Select Frame    XPath=//frame[@name='frame-top']
+    Select Frame    XPath=//frame[@name='frame-right']
+    ${right_txt}=    Get Text    XPath=//body
+    Unselect Frame
+    Select Frame    XPath=//frame[@name='frame-bottom']
+    ${bot_txt}=    Get Text    XPath=//body
+    Unselect Frame
+    @{act}=     Create List     ${left_txt}     ${mid_txt}     ${right_txt}     ${bot_txt}
+    Lists Should Be Equal   ${exp}  ${act}
+    Cleanup
+
+TC_024
+    [documentation]  Horizontal Slider
+    [tags]  InProgress
+    Prepare
+    Click Element       XPath=//a[text()='Horizontal Slider']
+    Wait Until Page Contains    Horizontal Slider
+    ${value}=    Get Text  XPath=//div[@class='sliderContainer']/span
+    Should Be Equal As Numbers  ${value}    0
+    Click Element At Coordinates    XPath=//div[@class='sliderContainer']/input     5   0
+    ${value}=    Get Text  XPath=//div[@class='sliderContainer']/span
+    Should Be Equal As Numbers  ${value}    2.5
     Cleanup

@@ -121,7 +121,6 @@ TC_007
     [tags]  Done
     Prepare
     Click Element       XPath=//a[text()='Checkboxes']
-    Sleep   500ms
     Page Should Contain     Checkboxes
     Checkbox Should Not Be Selected     XPath=//form[@id='checkboxes']/input[1]
     Checkbox Should Be Selected     XPath=//form[@id='checkboxes']/input[2]
@@ -354,9 +353,9 @@ TC_022
     Lists Should Be Equal   ${exp}  ${act}
     Cleanup
 
-TC_024
+TC_023
     [documentation]  Horizontal Slider
-    [tags]  InProgress
+    [tags]  Done
     Prepare
     Click Element       XPath=//a[text()='Horizontal Slider']
     Wait Until Page Contains    Horizontal Slider
@@ -365,4 +364,53 @@ TC_024
     Click Element At Coordinates    XPath=//div[@class='sliderContainer']/input     5   0
     ${value}=    Get Text  XPath=//div[@class='sliderContainer']/span
     Should Be Equal As Numbers  ${value}    2.5
+    Cleanup
+
+TC_024
+    [documentation]  Hovers
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Hovers']
+    Wait Until Page Contains    Hovers
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user1']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user2']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user3']
+    Mouse Over      XPath=//div[@class='figure'][1]
+    Element Should Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user1']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user2']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user3']
+    Mouse Over      XPath=//div[@class='figure'][2]
+    Element Should Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user2']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user1']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user3']
+    Mouse Over      XPath=//div[@class='figure'][3]
+    Element Should Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user3']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user1']
+    Element Should Not Be Visible   XPath=//div[@class='figcaption']/h5[text()='name: user2']
+    Cleanup
+
+TC_025
+    [documentation]  Inputs
+    [tags]  Done    TBD
+    Prepare
+    Click Element       XPath=//a[text()='Inputs']
+    Wait Until Page Contains    Inputs
+    Input Text      XPath=//div[@class='example']/input     99999
+    Cleanup
+
+TC_026
+    [documentation]  JQueryUI - Menu
+    [tags]  InProgress
+    Prepare
+    Click Element       XPath=//a[text()='JQuery UI Menus']
+    Wait Until Page Contains    UI element
+    Mouse Over       XPath=//a[text()='Enabled']
+    Wait Until Element Is Visible   XPath=//a[text()='Downloads']
+    Mouse Over       XPath=//a[text()='Downloads']
+    Wait Until Element Is Visible   XPath=//a[text()='PDF']
+    Click Element       XPath=//a[text()='PDF']
+    Click Element       XPath=//a[text()='Back to JQuery UI']
+    File Should Exist   menu.pdf
+    Wait Until Page Contains    JQuery UI
+    Page Should Contain     set of Widgets
     Cleanup

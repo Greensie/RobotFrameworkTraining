@@ -400,7 +400,7 @@ TC_025
 
 TC_026
     [documentation]  JQueryUI - Menu
-    [tags]  InProgress
+    [tags]  Done
     Prepare
     Click Element       XPath=//a[text()='JQuery UI Menus']
     Wait Until Page Contains    UI element
@@ -413,4 +413,35 @@ TC_026
     File Should Exist   menu.pdf
     Wait Until Page Contains    JQuery UI
     Page Should Contain     set of Widgets
+    Cleanup
+
+TC_027
+    [documentation]  JavaScript Alerts
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='JavaScript Alerts']
+    Wait Until Page Contains    JavaScript Alerts
+    Click Element   XPath=//button[text()='Click for JS Alert']
+    Alert Should Be Present
+    Click Element   XPath=//button[text()='Click for JS Confirm']
+    Alert Should Be Present
+    Click Element   XPath=//button[text()='Click for JS Prompt']
+    Alert Should Be Present     action=DISMISS
+    Page Should Contain     null
+    Click Element   XPath=//button[text()='Click for JS Prompt']
+    Alert Should Be Present
+    Page Should Not Contain     null
+    Cleanup
+
+TC_028
+    [documentation]  Key Presses
+    [tags]  InProgress
+    Prepare
+    @{tab}=     Create List     A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U   V   W   X   Y   Z
+    Click Element       XPath=//a[text()='Key Presses']
+    Wait Until Page Contains    Key Presses
+    FOR   ${let}    IN    @{tab}
+        Press Key   XPath=//input[@id='target']   ${let}
+        Page Should Contain   You entered: ${let}
+    END
     Cleanup

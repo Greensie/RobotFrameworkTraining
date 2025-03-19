@@ -2,6 +2,7 @@
 Library   SeleniumLibrary
 Library   OperatingSystem
 Library   Collections
+Library   String
 
 *** Variables ***
 ${url}      https://the-internet.herokuapp.com/
@@ -435,7 +436,7 @@ TC_027
 
 TC_028
     [documentation]  Key Presses
-    [tags]  InProgress
+    [tags]  Done
     Prepare
     @{tab}=     Create List     A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U   V   W   X   Y   Z
     Click Element       XPath=//a[text()='Key Presses']
@@ -444,4 +445,72 @@ TC_028
         Press Key   XPath=//input[@id='target']   ${let}
         Page Should Contain   You entered: ${let}
     END
+    Cleanup
+
+TC_029
+    [documentation]  Large & Deep DOM
+    [tags]  Done
+    Prepare Headless
+    Click Element       XPath=//a[text()='Large & Deep DOM']
+    Wait Until Page Contains    very large and deep
+    ${table}=   Create List     0
+    ${rows}=    Get Element Count    //table[@id='large-table']/tbody/tr
+    ${cols}=    Get Element Count    //table[@id='large-table']/tbody/tr[1]/td
+    ${name_cell}=    Get Text    //table[@id='large-table']/tbody/tr[1]/td[1]
+    FOR     ${i}    IN RANGE    1   ${rows+1}
+            FOR     ${j}    IN RANGE    1   ${cols+1}
+            ${name_cell}=    Get Text    //table[@id='large-table']/tbody/tr[${i}]/td[${j}]
+            Append To List      ${table}     ${name_cell}
+            END
+    END
+    List Should Not Contain Duplicates  ${table}
+    Cleanup
+
+TC_030
+    [documentation]  Opening a new window
+    [tags]  Done
+    Prepare
+    Switch Window
+    Click Element       XPath=//a[text()='Multiple Windows']
+    Wait Until Page Contains    Opening a new window
+    Click Element   XPath=//a[text()='Click Here']
+    ${handle}     Switch Window   NEW
+    Sleep   2s
+    Page Should Contain     New Window
+    Switch Window   MAIN
+    Page Should Contain     Opening a new window
+    Cleanup
+
+TC_031
+    [documentation]  Notification Message
+    [tags]  Done
+    Prepare
+    Click Element       XPath=//a[text()='Notification Messages']
+    Wait Until Page Contains    Action successful
+    Element Should Be Visible   XPath=//div[@id='flash-messages']
+    ${exp1}=    Set Variable     Action successful
+    ${exp2}=    Set Variable    Action unsuccesful, please try again
+    ${txt}=     Get Text    XPath=//div[@id='flash-messages']/div[@id='flash']
+    ${act}=     Get Substring     ${txt}    0   -2
+    Should Be Equal As Strings     ${exp1}    ${act}
+    Click Element   XPath=//a[text()='Click here']
+    ${txt}=     Get Text    XPath=//div[@id='flash-messages']/div[@id='flash']
+    ${act}=     Get Substring     ${txt}    0   -2
+    Should Be Equal As Strings     ${exp2}    ${act}
+    Cleanup
+
+TC_032
+    [documentation]  Shadowdom
+    [tags]  InProgress
+    Prepare
+    Click Element       XPath=//a[text()='Shadow DOM']
+    Wait Until Page Contains    Simple template
+    ${exp}      Set Variable    Let's have some different text!
+    ${exp2}     Set Variable    In a list!
+    ${txt}=     Get Text    XPath=//my-paragraph/span
+    Should Be Equal As Strings     ${exp}    ${txt}
+    ${txt}=     Get Text    XPath=//my-paragraph/ul/li[1]
+    ${txt2}=     Get Text    XPath=//my-paragraph/ul/li[2]
+    Should Be Equal As Strings     ${exp}    ${txt}
+    Should Be Equal As Strings     ${exp2}    ${txt2}
     Cleanup
